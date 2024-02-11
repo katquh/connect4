@@ -151,9 +151,10 @@
 // makeHtmlBoard();
 
 class Game{
-  constructor(p1, p2, height, width){
+  constructor(p1, p2, height=6, width=7){
     this.p1 = p1;
     this.p2 = p2;
+    // this.players[p1,p2];
     this.height = height;
     this.width = width;
     this.currPlayer = 1;
@@ -174,7 +175,8 @@ class Game{
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
     top.setAttribute('id', 'column-top');
-    top.addEventListener('click', this.handleClick);
+    this.handleGameClick = this.handleClick.bind(this);
+    top.addEventListener('click', this.handleGameClick);
   
     for (let x = 0; x < this.width; x++) {
       const headCell = document.createElement('td');
@@ -207,7 +209,8 @@ class Game{
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${currPlayer}`);
+    // piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
@@ -228,16 +231,16 @@ class Game{
   
     // place piece in board and add to HTML table
     this.board[y][x] = this.currPlayer;
-    placeInTable(y, x);
+    this.placeInTable(y, x);
     
     // check for win
-    if (checkForWin()) {
-      return endGame(`Player ${this.currPlayer} won!`);
+    if (this.checkForWin()) {
+      return this.endGame(`Player ${this.currPlayer} won!`);
     }
     
     // check for tie
     if (this.board.every(row => row.every(cell => cell))) {
-      return endGame('Tie!');
+      return this.endGame('Tie!');
     }
       
     // switch players
@@ -245,11 +248,8 @@ class Game{
   }
   
   checkForWin() {
-    function _win(cells) {
-      // Check four cells to see if they're all color of current player
-      //  - cells: list of four (y, x) cells
-      //  - returns true if all are legal coordinates & all match currPlayer
-      return cells.every(
+    const _win = (cells) =>
+      cells.every(
         ([y, x]) =>
           y >= 0 &&
           y < this.height &&
@@ -257,7 +257,7 @@ class Game{
           x < this.width &&
           this.board[y][x] === this.currPlayer
       )
-    }
+    
   
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
@@ -276,6 +276,21 @@ class Game{
     }
   }
 
+
 }
 
-let b = new Game(6,7, 10, 10);
+class Player{
+  constructor(color){
+    this.color = color;
+  }
+}
+
+
+document.getElementById("start-game").addEventListener("click", () => {
+let p1Color = document.querySelector('#p1-color');
+let p2Color = document.querySelector('#p2-color');
+let p1 = new Player(p1Color.value);
+let p2 = new Player(p2Color.value);
+let b = new Game(p1, p2);
+  }
+);
