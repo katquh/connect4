@@ -152,12 +152,12 @@
 
 class Game{
   constructor(p1, p2, height=6, width=7){
-    this.players[p1,p2];
+    this.players = [p1,p2];
     this.p1 = p1;
     this.p2 = p2;
     this.height = height;
     this.width = width;
-    this.currPlayer = 1;
+    this.currPlayer = p1;
     this.makeBoard();
     this.makeHtmlBoard();
     this.gameOver = false;
@@ -237,7 +237,7 @@ class Game{
     
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player ${this.players.indexOf(this.currPlayer) + 1} won!`);
     }
     
     // check for tie
@@ -246,7 +246,7 @@ class Game{
     }
       
     // switch players
-    this.currPlayer = this.players[0] ? this.players[1] : this.players[0];
+    this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
   
   checkForWin() {
@@ -293,6 +293,8 @@ let p1Color = document.querySelector('#p1-color');
 let p2Color = document.querySelector('#p2-color');
 let p1 = new Player(p1Color.value);
 let p2 = new Player(p2Color.value);
-let b = new Game(p1, p2);
+// let p1 = new Player(document.getElementById('p1-color').value);
+// let p2 = new Player(document.getElementById('p2-color').value);
+new Game(p1, p2);
   }
 );
