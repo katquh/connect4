@@ -152,9 +152,9 @@
 
 class Game{
   constructor(p1, p2, height=6, width=7){
+    this.players[p1,p2];
     this.p1 = p1;
     this.p2 = p2;
-    // this.players[p1,p2];
     this.height = height;
     this.width = width;
     this.currPlayer = 1;
@@ -218,6 +218,8 @@ class Game{
   }
   endGame(msg) {
     alert(msg);
+    const top = document.querySelector("#column-top");
+    top.removeEventListener("click", this.handleGameClick);
   }
   handleClick(evt) {
     // get x from ID of clicked cell
@@ -244,7 +246,7 @@ class Game{
     }
       
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.players[0] ? this.players[1] : this.players[0];
   }
   
   checkForWin() {
